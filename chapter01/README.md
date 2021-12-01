@@ -336,3 +336,133 @@ En la clase `FieldElement` podemos ahora definir los métodos `__add__` y `__sub
 True
 ```
 
+En Python podemos definir lo que significa una suma (el operador `+`) dentro del contexto de nuestra clase mediante el método de `__add__`. ¿Cómo hacemos ésto? Combinaremos lo que ya hemos aprendido de la aritmética de módulo y crearemos un nuevo método para nuestra clase `FieldElement` así:
+
+```python
+    def __add__(self, other):
+        if self.prime != other.prime:  # <1>
+            raise TypeError('Cannot add two numbers in different Fields')
+        num = (self.num + other.num) % self.prime  # <2>
+        return self.__class__(num, self.prime)  # <3>
+```
+
+1. Tenemos que asegurarnos que los elementos pertenezcan al mismo campo, de lo contrario, los cálculos no tendrían mucho sentido.
+2. La adición, en un campo finito, está definida con el operador de módulo, tal cual se explicó anteriormente.
+3. Debemos retornar una instancia de la clase. La cual tenemos, convenientemente accesible, mediante `self.__class__`. Pasas los dos argumentos principales, `num` y `self.prime`, para el método de `__init__` ya mencionado.
+
+
+####TODO: make this logic clearer
+Note que es posible utilizar `FieldElement`, en lugar de `self.__class__`, pero esto volvería a nuestro método menos fácil al momento de ser heredado. Estaremos utilizando una subclase de `FieldElement` más adelante, así que hacer el código heredable es importante aquí.
+
+### Ejercicio 3
+
+Escriba el correspondiente método de `__sub__`, que defina la resta de dos objetos de tipo `FieldElement`.
+
+## Multiplicación y Potencias con Campos Finitos
+
+Tal cual definimos nuestra suma `(+f)`, dentro de un campo finito cerrado, también podemos definir un nuevo método para llevar a cabo la multiplicación dentro de un campo finto cerrado. Así mismo, multiplicar el mismo número muchas veces, es una manera de definir elevar a la potencia. En esta sección, aprenderemos exactamente cómo definirlo utilizando la aritmética de módulo.
+
+La multiplicación se puede definir como sumar el mismo número en múltiples ocasiones:
+
+```math
+5 * 3 = 5 + 5 + 5 = 15
+
+8 * 17 = 8 + 8 + 8 + ... (un total de 17 veces 8) + 8 = 136
+```
+
+Podemos definir la multiplicación dentro de un campo finito de la misma forma. Operando en el campo `F19`, podemos observar:
+
+
+```math
+5 *f 3 = 5 +f 5 +f 5
+
+8 *f 17 = 8 +f 8 +f 8 +f ... (un total de 17 veces 8) +f 8
+```
+
+Ya aprendimos cómo calcular el lado derecho de la ecuación, y dicho resultado estará dentro del set de `F19`:
+
+```math
+5 *f 3 = 5 +f 5 +f 5 = 15 % 19 = 15
+
+8 *f 17 = 8 +f 8 +f ... (17 veces 8) +f 8 = (8 * 17) % 19 = 136 % 19 = 3
+```
+
+Note que cómo, el segundo resultado, no se intuye con tanta facilidad. No pensamos normalmente en la operación de `8 *f 17 = 3`, pero es una parte necesaria para definir a la multiplicación cerrada. Esto significa, que el resultado de una multiplicación dentro de un campo deberá estar siempre dentro del set `{0, 1, ..., p - 1}`.
+
+Elevar a la potencia, o un exponente, es simplemente multiplicar el número una y otra vez:
+
+```math
+7^3 = 7 *f 7 *f 7 = 343
+```
+
+Dentro de un campo finito, podemos elevar al exponente mediante la aritmética de módulo:
+
+```math
+7^3 = 343 % 19 = 1
+
+9^12 = 7
+```
+
+De nuevo, elevar al exponente nos arroja resultados muy poco intuitivos. Comúnmente no pensamos en términos de `7^3 = 1` ni de `9^12 = 7`. De nuevo, los campos finitos deben estar definidos para que el resultado de cualquier operación *siempre* esté dentro del campo.
+
+### Ejercicio 4
+
+Resuelva las siguientes ecuaciones en un campo `F97` (recuerde que `*` , `^`, son la versiones utilizadas dentro del campo):
+
+```math
+95 * 45 * 31
+
+17 * 13 * 19 * 44
+
+(12^7) * (77^49)
+```
+
+### Ejercicio 5
+
+Para valores de `k = 1, 3, 7, 13, 18`, ¿cuál es el set en `F19`?
+
+```math
+{k * 0, k * 1, k * 2, k * 3, ..., k * 18}
+```
+
+Acaso, ¿no ha notado algo particular en los elementos de los sets?
+
+## BIRD: ¿Por qué los campos primos son útiles?
+
+    > La respuesta al Ejercicio 5 es la razón por la que decidimos utilizar campos finitos con un número de elementos igual a un número primo. Sin importar el valor de se elija de *k*, mientras sea mayor que 0, multiplicar el set entero por *k* resultará en el mismo set con el que se comenzó.
+    > Intuitivamente, el hecho de tener un orden primo (tamaño del set), permite que cada elemento del campo finito sea equivalente.Si el orden del set fuera un número compuesto, multiplicar el set por uno de los divisores, resultaría en un set más pequeño.
+
+## Codeando una Multiplicación con Python
+
+Ahora que comprendemos cómo debe de ser una multiplicación de objetos `FieldElement`, queremos definir el método de `__mul__` que sobreescribe al operador de `*`. Queremos que ésto funcione:
+
+```python
+>>> from ecc import FieldElement
+>>> a = FieldElement(3, 13)
+>>> b = FieldElement(12, 13)
+>>> c = FieldElement(10, 13)
+>>> print(a*b==c)
+True
+```
+
+De la misma manera que lo hicimos para la suma y la resta, el siguiente ejercicio es hacer funcionar la multiplicación dentro de nuestra clase. Definiendo el método de `__mul__`.
+
+
+### Ejercicio 6
+
+Escriba el método correspondiente a `__mul__`, que defina la multiplicación de dos elementos pertenecientes al mismo campo finito.
+
+## Codeando la Potencia con Python
+
+Debemos de definir, la potencia un objeto de tipo `FieldElement`, en Python se utilizas el método de `__pow__`, sobreescribiendo el operador `**`. La diferencia aquí, radica en que el exponente no es un objeto de tipo `FieldElement`. Por lo tanto, tiene que ser tratado de manera un poco distinta. Queremos que lo siguiente funcione:
+
+```python
+>>> from ecc import FieldElement
+>>> a = FieldElement(3, 13)
+>>> b = FieldElement(1, 13)
+>>> print(a**3==b)
+True
+```
+
+Note que debido a que el exponente es un número entero, en lugar de otra instancia de `FieldElement`, el método recibe la variable `exponente` como entero, o `int`.
+
