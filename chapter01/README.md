@@ -63,14 +63,14 @@ Un campo finito de orden 17 luce así:
 
 
 ```math
-F11 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
+F17 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}
 ```
 
 Un campo finito de orden 983 luce así:
 
 
 ```math
-F11 = {0, 1, 2, ..., 982}
+F983 = {0, 1, 2, ..., 982}
 ```
 
 Observe que el orden del campo es siempre 1 mayor que el elemento más grande del set. Habrás notado que los campos tienen un número primo en el orden, en los tres ejemplos anteriores. Por una variedad de razones eso se volvera más claro posteriormente, resulta que los campos *deben* tener un orden equivalente al de un número primo elevado a la `n` potencia. Y de los campos finitos que tienen un orden equivalente a un número primo son de los que más estamos interesados.
@@ -211,6 +211,128 @@ Estaremos utilizando el módulo para definir la aritmética del campo. La mayor 
 
 ## Aritmética de Módulos en Python
 
+Python utiliza el operador aritmético de módulo `%`. Aquí un ejemplo de cómo se utiliza:
 
+```python
+>>> print(7 % 3)
+1
+```
 
+Podemos utilizar también el operador de módulo con números negativos, así:
+
+```python
+>>> print(-27 % 13)
+12
+```
+
+## Suma y Resta en Campos Finitos
+
+Recuerde que tenemos que definir la suma del campo finito de tal manera que se asegure que el resultado se encuentre dentro del set. Lo que queremos conseguir es que la suma dentro del campo finito sea cerrada.
+
+Podemos utilizar lo que aprendimos, aritmética de módulo, para volver la suma cerrada. Digamos que tenemos un campo finito de 19:
+
+```math
+F19 = {0, 1, 2, ..., 18}
+```
+
+Donde, `a, b ϵ F19`. Note que el símbolo `ϵ` significa "es un elemento de". En este caso, `a` y `b` son elementos de `F19`.
+
+La adición cerrada significa que:
+
+```math
+a +f b ϵ F19
+```
+
+Denotamos la adición del campo finito utilizando el símbolo de `+f` para evitar confusión con la adición tradicional de enteros, `+`.
+
+Si utilizamos la aritmética de módulo, garantizamos que éste sea el caso. Podemos definir `a +f b` de la siguiente manera:
+
+```math
+a +f b = (a + b) % 19
+```
+
+Por ejemplo:
+
+```math
+7 +f 8 = (7 + 8) % 19 = 15
+
+11 +f 17 = (11 + 17) % 19 = 9
+```
+
+Así sucesivamente, podemos apreciar cómo es el operador `+f`.
+
+Podemos tomar cualquier par de números en el set, sumárlos y darle la vuelta al final, para obtener el resultado de la suma. Estamos creando nuestro operador y resulta poco intuitivo. Después de todo, `11 +f 17 = 9` no aparenta estar correcto porque no estamos acostumbrados a la suma de campos finitos.
+
+De manera general, definitimos la suma de campos de esta manera:
+
+```math
+a +f b = (a + b) % p
+```
+
+Donde, `a, b ϵ Fp`.
+
+También definimos el inverso aditivo de la siguiente manera. `a ϵ Fp` implica que `-f a ϵ Fp`.
+
+```math
+-f a = (-a) % p
+```
+
+De nuevo, por claridad, utilizamos el operador `-f` para indicar que no se trata de una resta tradicional de enteros sino una operación de resta del campo finito.
+
+En `F19`:
+
+```math
+-f 9 = (-9) % 19 = 10
+```
+
+Lo que significa que:
+
+```math
+9 +f 10 = 0
+```
+
+Y eso resulta ser verdadero, `True` en Python. Similarmente, es posible hacer una resta en el campo:
+
+```math
+a -f b = (a - b) % p
+```
+
+Donde, `a, b ϵ Fp`.
+
+En `F19`:
+
+```math
+11 -f 9 = (11 - 9) % 19 = 2
+
+6 -f 13 = (6 - 13) % 19 = 12
+```
+
+Así sucesivamente.
+
+### Ejercicio 2
+
+Resuelve estos problemas para `F57`. (Asuma que todos los `+`, `-` son en realidad `+f`, `-f` respectivamente):
+
+```math
+44 + 33
+
+9 - 29
+
+17 + 42 + 49
+
+52 - 30 - 38
+```
+
+## Codeando Sumas y Restas en Python
+
+En la clase `FieldElement` podemos ahora definir los métodos `__add__` y `__sub__`. La idea de estos métodos es que queremos que algo así funcione:
+
+```python
+>>> from ecc import FieldElement
+>>> a = FieldElement(7, 13)
+>>> b = FieldElement(12, 13)
+>>> c = FieldElement(6, 13)
+>>> print(a+b==c)
+True
+```
 

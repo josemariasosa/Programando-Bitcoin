@@ -1,7 +1,9 @@
 # Programando Bitcoin
-## Aprenda a Programar en Bitcoin desde Cero
+Aprenda a Programar en Bitcoin desde Cero
 
-Traducción no oficial del libro de Programming Bitcoin, autor Jimmy Song, editorial O'Reilly.
+Traducción no oficial de la primera edición del libro "Programming Bitcoin", autor Jimmy Song, editorial O'Reilly.
+
+El **objetivo** de este esfuerzo, de traducir el libro al Español, es para la divulgación libre de conocimiento técnico.
 
 Cualquier aporte y corrección es bienvenida.
 
