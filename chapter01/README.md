@@ -154,7 +154,7 @@ Hablando formalmente, la operación de módulo es el restante después de la div
 Es posible que ayude pensar a la aritmética de módulo como unas matemáticas de reloj. Imagine el siguiente problema:
 
 ```math
-Son las 3 en punto ¿Qué hora serán en 47 horas hacia el futuro?
+Son las 3 en punto. ¿Qué hora serán en 47 horas hacia el futuro?
 ```
 
 La respuesta es 2 en punto, porque `(3 + 47) % 12 = 2` (observe la Figura 1-3).
@@ -166,19 +166,50 @@ También podríamos verlo como si se tratara de envolver, o "dar vueltas alreded
 Es posible realizar la operación de módulo en números negativos. Por ejemplo, se podría preguntar:
 
 ```math
-Son las 3 en punto ¿Qué hora fue hace 16 horas hacia el pasado?
+Son las 3 en punto. ¿Qué hora fue hace 16 horas hacia el pasado?
 ```
 
+La respuesta es 11 en punto.
 
+```math
+(3 - 16) % 12 = 11
+```
 
+El lado de los minutos es una operación de módulo también. Por ejemplo, puedes preguntar:
 
+```math
+Son las 12 minutos después de la hora. ¿Qué minuto serán después de 843 minutos en el futuro?
+```
 
+Serán 15 minutos después de la hora.
 
+```math
+(12 + 843) % 60 = 15
+```
 
+Además, es posible preguntar:
 
+```math
+Son las 23 minutos después de la hora. ¿Qué minuto serán después de 97 minutos en el futuro?
+```
 
+En este caso, la respuesta es `0`:
 
+```math
+(23 + 97) % 60 = 0
+```
 
+El módulo 0 indica que no hay residuo.
+
+El resultado de la operación de módulo (%), en minutos, está siempre dentro de 0 y 59, inclusive. Esta resulta ser una propiedad muy útil del módulo, porque incluse números muy grandes pueden ser reducidos a un rango más pequeño:
+
+```math
+14738495684013 % 60  = 33
+```
+
+Estaremos utilizando el módulo para definir la aritmética del campo. La mayor parte de las operaciones en un campo finito utiliza el operador de módulo de alguna u otra manera.
+
+## Aritmética de Módulos en Python
 
 
 
