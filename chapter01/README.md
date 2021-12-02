@@ -611,3 +611,25 @@ Resuelve las siguientes ecuaciones dentro del campo `F31`:
 
 (4^-4) * 11
 ```
+
+### Ejercicio 9
+
+Escriba el correspondiente método de `__truediv__`, el cual define la división de dos elementos.
+
+Note que en Python 3, la división se separa en los siguiente métodos: `__truediv__` y `__floordiv__`. La primera hace la división regular, y la segunda hace la división de enteros.
+
+## Redefiniendo Elevar a la Potencia
+
+El último punto que tenemos que revisar, antes de terminar este capítulo, es el método de `__pow__`, el cual necesita manejar exponentes negativos. Por ejemplo, `a^-3` necesita ser parte de los elementos del campo finito, pero el código actual no cumple con estos requisitos. Necesitamos que funcione el siguiente código:
+
+```python
+>>> from ecc import FieldElement
+>>> a = FieldElement(7, 13)
+>>> b = FieldElement(8, 13)
+>>> print(a**-3==b)
+True
+```
+
+Desafortunadamente, de la manera en la que definimos `__pow__`, no es capaz de manejar exponentes con negativos, porque el segundo argumento de la función básica de Python `pow` debe de ser necesariamente positiva.
+
+Sin embargo, podemos utilizar algunas matemáticas, de las que ya conocemos, para resolverlo. Conocemos por el Pequeño Teorema de Fermat que:
