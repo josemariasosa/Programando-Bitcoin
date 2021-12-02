@@ -464,5 +464,150 @@ Debemos de definir, la potencia un objeto de tipo `FieldElement`, en Python se u
 True
 ```
 
-Note que debido a que el exponente es un número entero, en lugar de otra instancia de `FieldElement`, el método recibe la variable `exponente` como entero, o `int`.
+Note que debido a que el exponente es un número entero, en lugar de otra instancia de `FieldElement`, el método recibe la variable `exponente` como entero, o `int`. Podemos codearlo de esta manera:
 
+```python
+class FieldElement:
+...
+    def __pow__(self, exponent):
+        n = exponent % (self.prime - 1)  # <1>
+        num = pow(self.num, n, self.prime)
+        return self.__class__(num, self.prime)  # <2>
+```
+
+1. Este es un modo perfecto de hacerlo, pero la función `pow(self.num, exponent, self.prime)` es mucho más eficiente.
+
+2. Debemos retornar una instancia de la clase, como se hizo anteriormente.
+
+¿Por qué no forzamos al exponente, a ser un objeto de tipo `FieldElement`? Resulta, que el exponente no tiene que ser parte del campo finito para que las matemáticas funcionen. De hecho, si lo fuera, el exponente no representaría el comportamiento intuitivo que esperaríamos, como la capacidad de sumar los exponentes cuando se multiplica con la misma base.
+
+Parte de lo que estamos haciendo, con esta explicación, parecería muy lenta para números muy grandes. Sin embargo, estaremos utilizando algunos trucos para mejorar el desempeño de los algoritmos.
+
+### Ejercicio 7
+
+Para cada valor de `p = 7, 11, 17, 31`. ¿Cuál es el set en `Fp`?
+
+```math
+{1^(p - 1), 2^(p - 1), 3^(p - 1), 4^(p - 1), (p - 1)^(p - 1)}
+```
+
+## División en un Campo Finito
+
+La intuición que nos ha ayudado con la adición, substracción, multiplicación, y quizá el exponente; desafortunádamente, no nos ayudará mucho con la división. Porque la división es la operación más difícil para hacer sentido, comenzaremos entonces, con algo que sí lo haga.
+
+En matemáticas normales, la división es el inverso a la multiplicación:
+
+```math
+7 * 8 = 56; implica que 56/8 = 7
+
+12 * 2 = 24; implica que 24/12 = 2
+```
+
+Y así sucesivamente, podemos utilizar esta definición de ahora en adelante. Note cómo es imposible, al igual que en las matemáticas regulares, dividir entre cero.
+
+En el campo `F19`, sabemos que:
+
+```math
+3 *f 7 = 21 % 19 = 2; implica que (2 /f 7) = 3
+
+9 *f 5 = 45 % 19 = 7; implica que (7 /f 5) = 9
+```
+
+Esta es una manera muy poco intuitiva de lo que pensamos de las fracciones: `(2 /f 7)` o `(7 /f 5)`; al menos, hasta antes de conocer los elementos de un campo finito. Sin embargo, esa es una de las propiedades importantes de los campos finitos: los campos finitos están cerrados ante la división. Esto significa que, dividir cualquier par de números, donde el denominador no sea 0, resultará en otro elemento dentro del campo finito.
+
+La pregunta entonces es, ¿cómo calculo `(2 /f 7)` si no conozco de antemano que `3 *f 7 = 2`? Ésta es, sin dudarlo, una muy buena pregunta; y para responderla, necesitamos el resultado del Ejercicio 7.
+
+Si no atrapaste la idea, la respuesta es que `n^(p - 1)` es siempre 1 para cada `p` que sea prima, y `n > 0`. Este es un bonito resultado, provinente de la teoría de los números, conocida como el Pequeño Teorema de Fermat.
+
+```math
+n^(p - 1) % p = 1
+```
+
+Donde `p` es prima.
+
+Y dado que estamos operando en campos primos, esto será siempre verdad.
+
+
+## BOX: Pequeño Teorema de Fermat
+
+---
+
+Existen muchas pruebas de este teorema, pero quizá la simple es utilizando lo que vimos en el Ejercicio 5, o sea, que estos sets son equivalentes:
+
+```math
+{1, 2, 3, ..., p - 2, p - 1} = {n % p, 2n % p, 3n % p, ..., (p-2)n % p, (p-1)n % p}
+```
+
+Los números resultantes podrán no estár en el orden correcto, pero los mismos números están presentes dentro de los dos sets. Podemos entonces multiplicar cada elemento en ambos sets, y obtener esta equivalencia:
+
+```math
+1 * 2 * 3 * ... * (p-2) * (p-1) % p = n * 2n * 3n * ... * (p-2)n * (p-1)n % p
+```
+
+El lado izquierdo de la ecuación, es lo mismo que `(p-1)! % p`, donde `!` es el número factorial (e.g., `5! = 5 * 4 * 3 * 2 * 1`). En el lado derecho de la ecuación, podemos juntar todas las `n` y obtener:
+
+```math
+(p-1)! * n^(p-1) % p
+```
+
+Por lo tanto:
+
+```math
+(p-1)! % p = (p-1)! * n^(p-1) % p
+```
+
+El `(p-1)!` se elimina en ambos lados de la ecuación, resultando en:
+
+```math
+1 = n^(p-1) % p
+```
+
+Esta es una prueba del Pequeño Teorema de Fermat.
+
+---
+
+Porque la división es el inverso de la multiplicación, sabemos que:
+
+```math
+a/b = a *f (1/b) = a *f (b^-1)
+```
+
+Podemos reducir el problema de la división, a un simple problema de multiplicación, al menos mientras sepamos el valor de `b^-1`. Aquí es cuando el Pequeño Teorema de Fermat entra en juego. Sabemos que:
+
+```math
+b^(p-1) = 1
+```
+
+Porque `p` es primo. Entonces:
+
+```math
+(b^-1) = (b^-1) *f 1 = (b^-1) *f b^(p-1) = b^(p-2)
+```
+
+O, lo que lo mismo:
+
+```math
+(b^-1) = b^(p-2)
+```
+
+En `F19`, esto indica que prácticamente `b^18 = 1`, lo que significa que `b^-1 = b^17`, para todos los valores de `b > 0`. En otras palabras, podemos calcular la inversa utilizando el operador de potencia. En el campo `F19`:
+
+```math
+2/7 = 2 * 7^(19 - 2) = 2 * 7^17 = 465261027974414 % 19 = 3
+
+7/5 = 7 * 5^(19 - 2) = 7 * 5^17 = 5340576171875 % 19 = 9
+```
+
+Esta es una operación relativamente costosa, porque los cálculos exponenciales crecen muy rápido. La división es la operación más costosa, por esta misma razón. Para aligerar la carga, podemos utilizar la función de libería básica: `pow`. En Python, `pow(7, 17)` es equivalente a `7**17`. La función de `pow`, sin embargo, permite un tercer argumento que permiten hacer los cálculos de manera más eficiente. Específicamente, la función `pow` extraerá el módulo, tomándolo del tercer argumento. Entonces, `pow(7, 17, 19)` tiene el mismo resultado que `7**17 % 19`, pero lo hará mucho más rápido, porque la función de módulo corre cada que se hace una ronda de multiplicación.
+
+### Ejercicio 8
+
+Resuelve las siguientes ecuaciones dentro del campo `F31`:
+
+```math
+3/24
+
+17^-3
+
+(4^-4) * 11
+```
