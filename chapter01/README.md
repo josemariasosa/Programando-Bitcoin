@@ -633,3 +633,38 @@ True
 Desafortunadamente, de la manera en la que definimos `__pow__`, no es capaz de manejar exponentes con negativos, porque el segundo argumento de la función básica de Python `pow` debe de ser necesariamente positiva.
 
 Sin embargo, podemos utilizar algunas matemáticas, de las que ya conocemos, para resolverlo. Conocemos por el Pequeño Teorema de Fermat que:
+
+Esto significa que podemos multiplicar por `a^(p-1)` las veces querramos. Entonces, para `a^-3`, podemos hacer lo siguiente:
+
+#TODO: formula
+
+Esta es una manera en la que podemos hacer exponentes negativos. Una implementación sencilla, sería de la siguiente manera:
+
+```python
+class FieldElement:
+...
+    def __pow__(self, exponent):
+        n = exponent
+        while n < 0:
+            n += self.prime - 1  # <1>
+        num = pow(self.num, n, self.prime)  # <2>
+        return self.__class__(num, self.prime)
+```
+
+1. Sumamos hasta encontrar un exponente positivo.
+2. Usamos la función básica de Python `pow` para hacer el cómputo más eficiente.
+
+Por fortuna, podríamos hacerlo incluso mejor. Ya aprendimos cómo forzar que un número no sea negativo, a utilizando nuestro amigo familiar `%`! Como bonus, podríamos incluso reducir los tiempos de cálculo de exponentes muy grandes, a su equivalente `a^(p-1) = 1`. Esto hará que la función `pow` no tenga que trabajar tan duro.
+
+```python
+    def __pow__(self, exponent):
+        n = exponent % (self.prime - 1)  # <1>
+        num = pow(self.num, n, self.prime)
+        return self.__class__(num, self.prime)
+```
+
+1. Convierte al exponente, a un número entero dentro del rango de `0` a `p-2`, inclusive.
+
+## Conclusión
+
+En este capítulo hemos aprendido acerca de los campos finitos y su implementación en Python. Estaremos utilizando los campos finitos en el Capítulo 3 para la introducir la Criptografía de Curva Elíptica. Posteriormente, aprenderemos de otro concepto matemático, que nos ayudará a comprender lo qué será la Criptografía de Curva Elíptica: las curvas elípticas.
