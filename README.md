@@ -10,7 +10,7 @@ Cualquier aporte y corrección es bienvenida.
 ## Lista de capítulos
 
 - [Capítulo 01 - Campos Finitos](/chapter01/README.md)
-- Capítulo 02 - Curvas Elípticas
+- [Capítulo 02 - Curvas Elípticas](/chapter02/README.md)
 - Capítulo 03 - Criptografía de Curvas Elípticas
 - Capítulo 04 - Serialización
 - Capítulo 05 - Transacciones
