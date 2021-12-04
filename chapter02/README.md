@@ -17,43 +17,43 @@ Seguramente ya has trabajado con otras ecuaciones que lucen de manera similar. P
 
 Hasta incluso, podrás recordar, que a la `m` se le conoce como *pendiente* y `b` es la intersección. Podemos incluso graficar la ecuación lineal, como se muestra en la Figura 2-1.
 
-#TODO: image
+![figura 2-1](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0201.png)
 
 *Figura 2-1. Ecuación lineal.*
 
 Similarmente, es probable que estés familiarizado con la ecuación cuadrática, la gráfica en Figura 2-2. Y seguramente, mientras llevabas la clase de álgebra, pudiste haber visto ecuaciones de más alto nivel, de magnitud de `x`. Algo como la ecuación cúbica, gráfica en Figura 2-3.
 
-#TODO: image
+![figura 2-2](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0202.png)
 
 *Figura 2-2. Ecuación cuadrática.*
 
-#TODO: image
+![figura 2-3](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0203.png)
 
 *Figura 2-3. Ecuación cúbica.*
 
 Las curvas elípticas no son tan diferentes. La única real diferencia entre la curva elíptica y la curva cúbica de la Figura 2-3, es el término `y^2` que se encuentra del lado izquierdo de la ecuación. Esto hace que la función tenga el efecto de simetría, al rededor del eje de las `x`, como se muestra en la Figura 2-4.
 
-#TODO: image
+![figura 2-4](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0204.png)
 
 *Figura 2-4. Curva elíptica contínua.*
 
 La curva elíptica tiene una menor inclinación que la curva cúbica. Esto se debe al término `y^2` que se encuentra del lado izquierdo de la ecuación. En ocasiones, la curva puede estar separada en dos partes como en la Figura 2-5. Se dice que está disasociada. 
 
-#TODO: image
+![figura 2-5](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0205.png)
 
 *Figura 2-5. Curva elíptica disasociada.*
 
 Para imaginarnos una curva elíptica, ayudaría el pensarla cómo si comenzáramos realizando la gráfica de la ecuación cúbica, Figura 2-6. Aplanamos la parte que está arriba del eje de las `x`, como en la Figura 2-7. Y por último, le damos un efecto de espejos con la parte que está por debajo del eje de las `x`, Figura 2-8.
 
-#TODO: image
+![figura 2-6](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0206.png)
 
 *Figura 2-6. Paso 1. Ecuación cúbica.*
 
-#TODO: image
+![figura 2-7](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0207.png)
 
 *Figura 2-7. Paso 2. Aplanar la ecuación cúbica.*
 
-#TODO: image
+![figura 2-8](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0208.png)
 
 *Figura 2-8. Efecto de espejo sobre el eje de las `x`.*
 
@@ -63,7 +63,7 @@ Específicamente, la curva elíptica utilizada en Bitcoin se llama `secp256k1` y
 
 La forma canónica es `y^2 = x^3 + ax + b`, así que la curva está definida por las constantes `a = 0`, `b = 7`. Luce como la Figura 2-9.
 
-#TODO: image
+![figura 2-9](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0209.png)
 
 *Figura 2-9. Curva elíptica secp256k1.*
 
@@ -117,21 +117,21 @@ Escriba el método de `__ne__` para el objeto tipo `Point`.
 
 Las curvas elípticas son útiles debido a a una propiedad conocida como la adición de puntos. La adición de puntos es cuando se realiza una operación con dos de los puntos, dentro de la misma curva, y se genera un tercer punto, que también está dentro de la curva. A esto se le conoce como adición porque la operación tiene mucho que ver con la intuición asociada a la operación de adición en las matemáticas. La adición de puntos es conmutativa. Esto quiere decir, que sumar el punto `A` con el punto `B`, es lo mismo que sumar el punto `B` con el punto `A`.
 
-#TODO: image
+![figura 2-10](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0210.png)
 
 *Figura 2-10. La línea intersecta en un solo punto.*
 
-#TODO: image
+![figura 2-11](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0211.png)
 
 *Figura 2-11. La línea intersecta en tres puntos.*
 
 Las únicas dos excepciones son, cuando la línea cruza verticalmente, Figura 2-12. Y cuando la línea es tangente a la curva, Figura 2-13.
 
-#TODO: image
+![figura 2-12](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0212.png)
 
 *Figura 2-12. La línea intersecta en dos puntos, porque es vertical.*
 
-#TODO: image
+![figura 2-13](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0213.png)
 
 *Figura 2-13. La línea intersecta en dos puntos, porque toca tangencialmente a la curva.*
 
@@ -144,7 +144,7 @@ Así que, para cualquier par de puntos `P1 = (x1, y1)` y `P2 = (x2, y2)`, podemo
 - Encontrar el punto que intersecta la curva elíptica en una tercera vez, dibujando una línea que pase por `P1` y `P2`.
 - Proyectar el punto sobre el eje de las `x`, como en la Figura 2-14.
 
-#TODO: image
+![figura 2-14](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0214.png)
 
 *Figura 2-14. Adición de puntos.*
 
@@ -177,7 +177,7 @@ A + (-A) = I
 
 Visualmente, estos puntos son opuestos, el uno del otro, en el eje de las `x` dentro de la curva, ver Figura 2-15.
 
-#TODO: image
+![figura 2-15](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0215.png)
 
 *Figura 2-15. Intersección de línea vertical.*
 
@@ -189,13 +189,13 @@ La *asociatividad* significa que `(A + B) + C = A + (B + C)`. Esta propiedad res
 
 Se puede observar en las dos Figuras 2-16 y 2-17, que el punto final es el mismo. En otras palabras, tenemos una buena razón para creer en `(A + B) + C = A + (B + C)`. Esta no se trata de una prueba formal para la asociatividad en la suma de puntos, sin embargo, esta gráfica debería de darnos una intuición de que la propiedad es verdad.
 
-#TODO: image
+![figura 2-16](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0216.png)
 
 *Figura 2-16. (A + B) + C.*
 
-#TODO: image
+![figura 2-17](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0217.png)
 
-*Figura 2-15. A + (B + C).*
+*Figura 2-17. A + (B + C).*
 
 Para codear la adición puntos, separaremos el proceso en tres pasos:
 
@@ -351,6 +351,8 @@ Esto se había quedado resuelto previamente en el Ejercicio 3.
 
 ¿Qué pasaría cuando `P1 = P2`? Visualmente, tendríamos que calcular la línea tangente a la curva en `P1`, y encontrar el punto donde vuelve a intersectar la curva elíptica. La gráfica luce como en la Figura 2-18, que habíamos visto previamente.
 
+![figura 2-18](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0218.png)
+
 *Figura 2-18. Línea tangente a la curva.*
 
 Una vez más, encontramos la pendiente del punto:
@@ -399,7 +401,7 @@ Escriba el método de `__add__` cuando `P1 = P2`.
 
 Existe una excepción adicional, y esto involucra el caso cuando la línea tangente es vertical, Figura 2-19.
 
-#TODO: image
+![figura 2-19](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0219.png)
 
 *Figura 2-19. Línea vertical y tangencial a la curva.*
 
