@@ -94,7 +94,23 @@ Escriba el método de `__ne__` para el objeto tipo `Point`.
 
 Las curvas elípticas son útiles debido a a una propiedad conocida como la adición de puntos. La adición de puntos es cuando se realiza una operación con dos de los puntos, dentro de la misma curva, y se genera un tercer punto, que también está dentro de la curva. A esto se le conoce como adición porque la operación tiene mucho que ver con la intuición asociada a la operación de adición en las matemáticas. La adición de puntos es conmutativa. Esto quiere decir, que sumar el punto `A` con el punto `B`, es lo mismo que sumar el punto `B` con el punto `A`.
 
+#TODO: image
 
+*Figura 2-10. La línea intersecta en un solo punto.*
+
+#TODO: image
+
+*Figura 2-11. La línea intersecta en tres puntos.*
+
+Las únicas dos excepciones son, cuando la línea cruza verticalmente, Figura 2-12. Y cuando la línea es tangente a la curva, Figura 2-13.
+
+#TODO: image
+
+*Figura 2-12. La línea intersecta en dos puntos, porque es vertical.*
+
+#TODO: image
+
+*Figura 2-13. La línea intersecta en dos puntos, porque toca tangencialmente a la curva.*
 
 
 
