@@ -327,15 +327,98 @@ Quedando así comprobado.
 
 ---
 
+### Ejercicio 4
 
+Para la curva `y^2 = x^3 + 5x + 7`, calcule la suma: `(2, 5) + (-1, -1)`.
 
+## Codeando la Adición de Puntos cuando X1 es diferente a X2
 
+Ahora, incluiremos el código en nuestra librería. Tenemos que ajustar el método de `__add__` para que sea capáz de manejar el caso en el que `x1` es diferente a `x2`. Tenemos las fórmulas:
 
+#TODO: formula
 
+Al final del método, regresaremos una instancia de la clase `Point`. Utilizando el método de `self.__class__` para heredar la clase con mayor facilidad.
 
+### Ejercicio 5
 
+Escriba el método de `__add__` dónde `x1` sea diferente de `x2`.
 
+## Adición de Puntos cuando P1 = P2
 
+Cuando las coordenadas de `x` son la mismas, y la coordenada de `y` diferente, nos encontramos con dos puntos opuestos sobre el eje de las `x`. Sabemos que esto significa:
 
+Esto se había quedado resuelto previamente en el Ejercicio 3.
 
+¿Qué pasaría cuando `P1 = P2`? Visualmente, tendríamos que calcular la línea tangente a la curva en `P1`, y encontrar el punto donde vuelve a intersectar la curva elíptica. La gráfica luce como en la Figura 2-18, que habíamos visto previamente.
+
+*Figura 2-18. Línea tangente a la curva.*
+
+Una vez más, encontramos la pendiente del punto:
+
+#TODO: formula
+
+El resto de la fórmula continúa como ya se habíamos hecho antes, excepto cuando `x1 = x2`, por lo que las combinamos:
+
+#TODO: formula
+
+## BIRD: Derivando la Pendiente Tangente a la Curva
+
+Es posible derivar la pendiente de la línea tangente utilizando matemáticas un poco más avanzadas, Cálculo. Sabemos que la pendiente en cualquier punto es:
+
+#TODO: formula
+
+Para obtener el resultado, necesitamos derivar ambos lados de la ecuación de curva elíptica:
+
+#TODO: formula
+
+Realizando la derivada en ambos lados, obtenemos:
+
+#TODO: formula
+
+Resolviendo para `dy/dx`:
+
+#TODO: formula
+
+Y así es como llegamos a la fórmula de la pendiente. Esto nos ayudará para realizar la adición de puntos.
+
+### Ejercicio 6
+
+Para la curva `y^2 = x^3 + 5x + 7`, calcule: `(-1, -1) + (-1, -1)`.
+
+## Codeando la Adición de Puntos cuando P1 = P2
+
+Ajustamos el método de `__add__` para cubrir este caso en particular. Tenemos las fórmulas y ahora las implementaremos:
+
+#TODO: formula
+
+### Ejercicio 7
+
+Escriba el método de `__add__` cuando `P1 = P2`.
+
+## Codeando una Excepción Más
+
+Existe una excepción adicional, y esto involucra el caso cuando la línea tangente es vertical, Figura 2-19.
+
+#TODO: image
+
+*Figura 2-19. Línea vertical y tangencial a la curva.*
+
+Esto solo puede pasar si `P1 = P2` y la coordenada de `y` es `0`, por lo que el cálculo de la pendiente terminar involucrando al `0` en el denominador.
+
+Para manejar este caso especial:
+
+```python
+class Point:
+...
+    def __add__(self, other):
+        ...
+        if self == other and self.y == 0 * self.x:   # <1>
+            return self.__class__(None, None, self.a, self.b)
+```
+
+1. Si los dos puntos son iguales, y la coordenada de `y` es 0, regresamos el punto al infinito.
+
+## Conclusión
+
+Hemos cubierto lo que son las curvas elípticas, cómo funcionan y cómo realizar la adición de puntos. Ahora combinaremos estos conceptos para aprender la criptografía de la curva elíptica en el capítulo 3.
 

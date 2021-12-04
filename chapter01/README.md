@@ -133,7 +133,9 @@ Una de las herramientas que podemos utilizar para hacer campos finitos cerrados 
 
 Podemos definir la adición dentro del set finito utilizando la aritmética de módulo, la cual probablemente aprendiste cuando estudiaste las divisiones por primera vez. ¿Recuerdas los problemas como el que se muestra en la Figura 1-1?
 
-Figura 1-1. División larga ejemplo 1.
+![figura 1-1](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0101.png)
+
+*Figura 1-1. División larga ejemplo 1.*
 
 Cuando la división no era exacta, existía un residuo, o el valor restante de la división entera. Definimos el módulo de la misma manera. Utilizamos el operador `%` para el módulo.
 
@@ -141,9 +143,11 @@ Cuando la división no era exacta, existía un residuo, o el valor restante de l
 7 % 3 = 1
 ```
 
-Figura 1-2 muestra otro ejemplo.
+La Figura 1-2 muestra otro ejemplo.
 
-Figura 1-2. División larga ejemplo 2.
+![figura 1-2](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0102.png)
+
+*Figura 1-2. División larga del ejemplo 2.*
 
 Hablando formalmente, la operación de módulo es el restante después de la división de un número y el otro. Veamos otro ejemplo con números más grandes:
 
@@ -159,7 +163,9 @@ Son las 3 en punto. ¿Qué hora serán en 47 horas hacia el futuro?
 
 La respuesta es 2 en punto, porque `(3 + 47) % 12 = 2` (observe la Figura 1-3).
 
-Figura 1-3. Reloj yendo en el tiempo 47 horas hacia delante.
+![figura 1-3](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0103.png)
+
+*Figura 1-3. Reloj yendo en el tiempo 47 horas hacia delante.*
 
 También podríamos verlo como si se tratara de envolver, o "dar vueltas alrededor", en el sentido de que se regresa a 0 cada vez que se mueve al rededor del reloj 12 horas.
 
