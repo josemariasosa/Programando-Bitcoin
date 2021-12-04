@@ -71,14 +71,37 @@ La forma canónica es `y^2 = x^3 + ax + b`, así que la curva está definida por
 
 Por una variedad de razones, que serán claras más adelante, no estamos interesados en la curva como tal, sino más bien, en los puntos específicos de esa curva. Por ejemplo, en la curva `y^2 = x^3 + 5x + 7`, estamos interesados en la coordenada `(-1, 1)`. Vamos entonces a definir la clase `Point`, para hacer referencia a un punto específico de la curva. La curva tiene que ser de la siguiente manera `y^2 = x^3 + ax + b`, para que podamos definirla, únicamente, con los valores de `a` y `b`.
 
-#TODO: code
+```python
+class Point:
+
+    def __init__(self, x, y, a, b):
+        self.a = a
+        self.b = b
+        self.x = x
+        self.y = y
+        if self.y**2 != self.x**3 + a * x + b:  # <1>
+            raise ValueError('({}, {}) is not on the curve'.format(x, y))
+
+    def __eq__(self, other):  # <2>
+        return self.x == other.x and self.y == other.y \
+            and self.a == other.a and self.b == other.b
+```
 
 1. Aquí nos aseguramos que el punto se encuentre dentro de la curva.
 2. Los puntos son iguales sí, y sólo sí, están en la misma curva y tienen las mismas coordenadas.
 
-Podemos ahora crear objetos de tipo `Point`, y obtendremos un error si el punto se encuentra afuera de la curva.
+Podemos ahora crear objetos de tipo `Point`, y obtendremos un error si el punto se encuentra afuera de la curva:
 
-#TODO: code
+```python
+>>> from ecc import Point
+>>> p1 = Point(-1, -1, 5, 7)
+>>> p2 = Point(-1, -2, 5, 7)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "ecc.py", line 143, in __init__
+    raise ValueError('({}, {}) is not on the curve'.format(self.x, self.y))
+ValueError: (-1, -2) is not on the curve
+```
 
 En otras palabras, el método de `__init__` va a levantar a una excepción cuando el punto no se encuentre dentro de la curva.
 
@@ -128,3 +151,191 @@ Así que, para cualquier par de puntos `P1 = (x1, y1)` y `P2 = (x2, y2)`, podemo
 Primero, dibujamos una línea que cruce los dos puntos que estamos sumando, `A` y `B`. La tercera intersección es el punto `C`. Reflejamos el valor de ese punto sobre el eje de las `x`, el cual nos pone en el punto `A + B`, como en la Figura 2-14.
 
 Una de las propiedades qué vamos a utilizar para la suma de los puntos, no es necesariamente intuitiva. Podemos calcular la adición de puntos fácilmente, utilizando una fórmula. La solución es poco intuitiva, porque el resultado de la suma de puntos, puede estar en cualquier lugar dados dos puntos en la curva. Regresando a la Figura 2-14, el resultado de `A + B` está a la derecha de los dos puntos. Para el punto `A + C` el resultado está en algún lugar en medio de los puntos. Y para `A + C`, el resultado estaría a la izquierda de los dos puntos. Utilizando terminología de matemáticas, se puede decir que la adición de puntos es *no-lineal*.
+
+## La Matemática de Sumar Puntos
+
+La adición de puntos satisface algunas propiedades que asociamos con la suma, como:
+
+- Identidad
+- Conmutatividad
+- Asociatividad
+- Invertibilidad
+
+La propiedad de *identidad* significa que es posible hacer una operación con cero. Existe un punto `I` que, cuándo se suma al punto `A`, el resultado es `A`:
+
+```math
+I + A = A
+```
+
+Llamaremos a este punto: *punto al infinito*, la razón quedará clara en un momento.
+
+Esto está relacionado a la propiedad de *invertibilidad*. Para un punto `A`, existe otro punto `-A` qué el sumarse resulta el punto de *identidad*. Esto es:
+
+```math
+A + (-A) = I
+```
+
+Visualmente, estos puntos son opuestos, el uno del otro, en el eje de las `x` dentro de la curva, ver Figura 2-15.
+
+#TODO: image
+
+*Figura 2-15. Intersección de línea vertical.*
+
+Esta es la razón por la que llamamos a este punto: *punto al infinito*. Tenemos un punto extra en la curva elíptica que hace que la línea vertical intersecte la curva en una tercera ocasión.
+
+La *conmutatividad* significa que `A + B = B + A`. Esto resulta obvio porque la línea que va del punto `A` al punto `B`, intersecta la curva una tercera vez en el mismo lugar, sin importar el orden.
+
+La *asociatividad* significa que `(A + B) + C = A + (B + C)`. Esta propiedad resulta no ser tan obvia y es la razón por la cual hacemos el salto sobre el eje de las `x`. Esto se muestra en la Figuras 2-16 y Figura 2-17.
+
+Se puede observar en las dos Figuras 2-16 y 2-17, que el punto final es el mismo. En otras palabras, tenemos una buena razón para creer en `(A + B) + C = A + (B + C)`. Esta no se trata de una prueba formal para la asociatividad en la suma de puntos, sin embargo, esta gráfica debería de darnos una intuición de que la propiedad es verdad.
+
+#TODO: image
+
+*Figura 2-16. (A + B) + C.*
+
+#TODO: image
+
+*Figura 2-15. A + (B + C).*
+
+Para codear la adición puntos, separaremos el proceso en tres pasos:
+
+1. Cuándo los puntos se encuentran en una línea vertical, o se está utilizando el punto identidad.
+2. Cuándo los puntos no se encuentran en una línea vertidad, y son diferentes.
+3. Cuando los dos puntos son iguales.
+
+# Haciendo el Código para la Adición de Puntos
+
+Primero nos encargaremos del punto identidad, o del punto al infinito. Debido a que no podemos utilizar el valor de `infinito` en Python, utilizaremos el valor de `None` en su lugar. Queremos que lo siguiente funcione:
+
+```python
+>>> from ecc import Point
+>>> p1 = Point(-1, -1, 5, 7)
+>>> p2 = Point(-1, 1, 5, 7)
+>>> inf = Point(None, None, 5, 7)
+>>> print(p1 + inf)
+Point(-1,-1)_5_7
+>>> print(inf + p2)
+Point(-1,1)_5_7
+>>> print(p1 + p2)
+Point(infinity)
+```
+
+Para hacer que esto funcione, necesitamos hacer dos cosas. Primero, tenemos que ajustar el método de `__init__` para evitar que evalúe, si la ecuación de la curva está satisfecha, cuando tenemos un punto al infinito. Posteriormente, tenemos que cargar el operador de adición, o el método de `__add__`, de la misma manera que lo hicimos con la clase `FieldElement`.
+
+```python
+class Point:
+
+    def __init__(self, x, y, a, b):
+        self.a = a
+        self.b = b
+        self.x = x
+        self.y = y
+        if self.x is None and self.y is None:  # <1>
+            return
+        if self.y**2 != self.x**3 + a * x + b:
+            raise ValueError('({}, {}) is not on the curve'.format(x, y))
+
+    def __add__(self, other):  # <2>
+        if self.a != other.a or self.b != other.b:
+            raise TypeError('Points {}, {} are not on the same curve'.format
+            (self, other))
+
+        if self.x is None:  # <3>
+            return other
+        if other.x is None:  # <4>
+            return self
+```
+
+1. Si las coordenadas de `x` y `y` son `None`, identificamos el punto al infinito. Note que el siguiente condicional de `if` va a fallar si no retornamos aquí.
+2. Sobrescribimos el operador de adición aquí.
+3. Si `self.x` es `None` significa qué `self` es el punto al infinito, o la identidad aditiva. Si es así, entonces regresamos `other`.
+4. Si `other.x` es `None` significa qué `other` es el punto al infinito, o la identidad aditiva. Si es así, entonces regresamos `self`.
+
+### Ejercicio 3
+
+Asegúrese de que el código sea capáz de procesar el caso cuando los dos puntos son la inversa aditiva, esto es, que tienen la misma `x` pero diferente `y`, resultando en una línea vertical. Esto deberá de retornar el punto al infinito.
+
+## Adición de Puntos cuando X1 es diferente a X2
+
+Ahora que hemos cubierto la línea vertical, examinaremos el caso cuando los puntos son diferentes. Cuando tenemos dos puntos dónde la `x` difiere, podemos sumar utilizando una simple fórmula. Para llevar a cabo la operación, primero calcularemos la pendiente creada por los dos puntos. Podemos hacer esto utilizando la fórmula de pre-álgebra:
+
+```math
+P1 = (x1, y1); P2 = (x2, y2); P3 = (x3, y3);
+
+P1 + P2 = P3
+
+s = (y2 - y1)/(x2 - x1)
+```
+
+La variable `s` representa la *pendiente*, y podemos utilizarla para calcular `x3`. Una vez calculada `x3`, podemos calcular `y3`. `P3` puede ser obtenido mediante la siguiente fórmula:
+
+```math
+x3 = s^2 - x1 - x2
+
+y3 = s(x1 - x3) - y1
+```
+
+Recuerde que `y3` es el reflejo del punto sobre el eje de las `x`.
+
+## BOX: Derivando la Fórmula de Adición de Puntos
+
+---
+
+Supongamos lo siguiente:
+
+#TODO: formula
+
+Queremos conocer lo que vale `P3`.
+
+Comencemos por el hecho de que la línea pasa a través de los puntos `P1` y `P2`, y tiene la siguiente fórmula:
+
+#TODO: formula
+
+La segunda fórmula es la ecuación de la línea que intersecta los puntos `P1` y `P2`. Utilizando esta fórmula, y combinándola con la ecuación de la curva elíptica, obtenemos lo siguiente:
+
+#TODO: formula
+
+Recolectando los términos, tenemos esta ecuación polinomial:
+
+#TODO: formula
+
+También, sabemos que `x1`, `x2` y `x3` son soluciones de esta ecuación, entonces:
+
+#TODO: formula
+
+De antes, conocíamos que:
+
+#TODO: formula
+
+Existe un resultado, proveniente de la fórmula de Vieta, que específica que los coeficientes deben ser iguales si la raíz es la misma. El primer coeficiente que intersecta es el coeficiente frente `x^2`:
+
+#TODO: formula
+
+Podemos utilizar esto para derivar la fórmula de `x3`:
+
+#TODO: formula
+
+Posteriormente, insertamos este resultado en la fórmula de arriba:
+
+#TODO: formula
+
+Pero tenemos que reflejar sobre el eje de las `x`, por lo que el lado derecho de la ecuación es negado:
+
+#TODO: formula
+
+Quedando así comprobado.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
