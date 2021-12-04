@@ -112,5 +112,19 @@ Las únicas dos excepciones son, cuando la línea cruza verticalmente, Figura 2-
 
 *Figura 2-13. La línea intersecta en dos puntos, porque toca tangencialmente a la curva.*
 
+Volveremos a revisar estos dos casos en particular más adelante.
 
+Podemos definir la adición de puntos, utilizando el hecho de que la línea intersecta en 1 o 3 puntos en la curva elíptica. Dos puntos definen una línea, así que, como esta línea debe interceptar la curva más de una vez, ese tercer punto, reflejado sobre el eje de las `x`, es el resultado de la adición de los puntos.
 
+Así que, para cualquier par de puntos `P1 = (x1, y1)` y `P2 = (x2, y2)`, podemos calcular `P1 + P2` de la siguiente forma:
+
+- Encontrar el punto que intersecta la curva elíptica en una tercera vez, dibujando una línea que pase por `P1` y `P2`.
+- Proyectar el punto sobre el eje de las `x`, como en la Figura 2-14.
+
+#TODO: image
+
+*Figura 2-14. Adición de puntos.*
+
+Primero, dibujamos una línea que cruce los dos puntos que estamos sumando, `A` y `B`. La tercera intersección es el punto `C`. Reflejamos el valor de ese punto sobre el eje de las `x`, el cual nos pone en el punto `A + B`, como en la Figura 2-14.
+
+Una de las propiedades qué vamos a utilizar para la suma de los puntos, no es necesariamente intuitiva. Podemos calcular la adición de puntos fácilmente, utilizando una fórmula. La solución es poco intuitiva, porque el resultado de la suma de puntos, puede estar en cualquier lugar dados dos puntos en la curva. Regresando a la Figura 2-14, el resultado de `A + B` está a la derecha de los dos puntos. Para el punto `A + C` el resultado está en algún lugar en medio de los puntos. Y para `A + C`, el resultado estaría a la izquierda de los dos puntos. Utilizando terminología de matemáticas, se puede decir que la adición de puntos es *no-lineal*.
