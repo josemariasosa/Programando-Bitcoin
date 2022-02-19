@@ -16,3 +16,23 @@ Esto funciona porque los números reales son también un campo. A diferencia del
 5. Sí `a` está dentro del conjunto y es diferente a `0`, `a^-1` está en el conjunto, por lo que se define cómo el valor que toma `a * (a^-1) = 1`.
 
 Claramente, es cierto que la suma normal y multiplicación aplican para la primera parte, las identidades de `0` y `1` existen para la adición y multiplicación. `-x` es el aditivo inverso, y `1/x` es el multiplicativo inverso.
+
+Los números reales son fáciles de plasmar en una gráfica. Por ejemplo, `y^2 = x^3 + 7` se grafica como la Figura 3-1.
+
+![figura 3-1](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0301.png)
+
+Figura 3-1. *secp256k1* sobre el conjunto de números reales.
+
+Resulta que podemos utilizar la ecuación de adición de puntos sobre cualquier campo, incluyendo el campo finito que aprendimos en el Capítulo 1. La única diferencia es que tenemos que usar utilizar las operaciones de adición/sustracción/multiplicación/división definidas en el Capítulo 1, no las operaciones normales que utilizan los números reales.
+
+## Curvas Elípticas sobre Campos Finitos
+
+¿Cómo luce una curva elíptica sobre un campo finito? Veamos la ecuación `y^2 = x^3 + 7` sobre `F103`. Podemos verificar que el punto `(17, 64)` se encuentra dentro de la curva, mediante el cálculo de ambos lados de la ecuación:
+
+```text
+y^2 = 64^2 % 103 = 79
+
+x^3 + 7 = (17^3 + 7) % 103 = 79
+```
+
+Hemos verificado que este punto se encuentra dentro de la curva utilizando matemáticas de campo finito.
