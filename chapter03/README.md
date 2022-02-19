@@ -21,7 +21,7 @@ Los números reales son fáciles de plasmar en una gráfica. Por ejemplo, `y^2 =
 
 ![figura 3-1](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0301.png)
 
-Figura 3-1. *secp256k1* sobre el conjunto de números reales.
+*Figura 3-1. secp256k1 sobre el conjunto de números reales.*
 
 Resulta que podemos utilizar la ecuación de adición de puntos sobre cualquier campo, incluyendo el campo finito que aprendimos en el Capítulo 1. La única diferencia es que tenemos que usar utilizar las operaciones de adición/sustracción/multiplicación/división definidas en el Capítulo 1, no las operaciones normales que utilizan los números reales.
 
@@ -36,3 +36,14 @@ x^3 + 7 = (17^3 + 7) % 103 = 79
 ```
 
 Hemos verificado que este punto se encuentra dentro de la curva utilizando matemáticas de campo finito.
+
+Debido a que nos encontramos evaluando la ecuación sobre un campo finito, al momento de graficarla, luce completamente diferente (Figura 3-2).
+
+![figura 3-2](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0302.png)
+
+*Figura 3-2. Curva elíptica sobre un campo finito.*
+
+Cómo se puede observar, la gráfica luce más como un diagrama de dispersión y no existe una curva definida y continúa. Esto no es una sorpresa porque la representación de los puntos es discreta. El único patrón que existe en la curva es simétrica justo en el medio, debido al término de `y^2`. En cambio, la gráfica no es simétrica sobre el eje de las `x` como la curva de números reales, pero sí a mitad de camino en el eje `y` debido a que no existen números negativos en un campo finito.
+
+Lo más impresionante es que podemos utilizar la misma ecuación para la adición de puntos, con la adición, sustracción, multiplicación, división y potenciación cómo hemos definido para el campo finito y todo sigue funcionando correctamente. Esto puede parecer sorprendente, pero en las matemáticas abstractas existen regularidades cómo ésta, a pesar de ser una manera muy distinta al modo tradicional de realizar las operaciones con las que estamos familiarizados.
+
