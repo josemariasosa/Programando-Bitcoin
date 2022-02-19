@@ -11,7 +11,7 @@ Cualquier aporte y corrección es bienvenida.
 
 - [Capítulo 01 - Campos Finitos](/chapter01/README.md)
 - [Capítulo 02 - Curvas Elípticas](/chapter02/README.md)
-- Capítulo 03 - Criptografía de Curvas Elípticas
+- [Capítulo 03 - Criptografía de Curva Elíptica](/chapter03/README.md)
 - Capítulo 04 - Serialización
 - Capítulo 05 - Transacciones
 - Capítulo 06 - El Lenguaje de Programación Script
