@@ -47,3 +47,120 @@ Cómo se puede observar, la gráfica luce más como un diagrama de dispersión y
 
 Lo más impresionante es que podemos utilizar la misma ecuación para la adición de puntos, con la adición, sustracción, multiplicación, división y potenciación cómo hemos definido para el campo finito y todo sigue funcionando correctamente. Esto puede parecer sorprendente, pero en las matemáticas abstractas existen regularidades cómo ésta, a pesar de ser una manera muy distinta al modo tradicional de realizar las operaciones con las que estamos familiarizados.
 
+### Ejercicio 1
+
+Evalúe si los siguientes puntos se encuentran dentro de la curva `y^2 = x^3 + 7` sobre `F223`:
+
+```text
+(192, 105), (17, 56), (200, 119), (1, 193), (42, 99)
+```
+
+## Codeando Curvas Elípticas sobre Campos Finitos
+
+Dado que hemos definido el punto de la curva elíptica y también las operaciones `+`, `-`, `*` y `/` para los campos finitos, podemos combinar las dos clases para crear los puntos de la curva elíptica sobre un campo finito:
+
+```python
+>>> from ecc import FieldElement, Point
+>>> a = FieldElement(num=0, prime=223)
+>>> b = FieldElement(num=7, prime=223)
+>>> x = FieldElement(num=192, prime=223)
+>>> y = FieldElement(num=105, prime=223)
+>>> p1 = Point(x, y, a, b)
+>>> print(p1)
+Point(192,105)_0_7 FieldElement(223)
+```
+
+Cuándo inicializamos `Point`, vamos a correr la siguiente parte del código:
+
+```python
+class Point:
+
+    def __init__(self, x, y, a, b):
+        self.a = a
+        self.b = b
+        self.x = x
+        self.y = y
+        if self.x is None and self.y is None:
+            return
+        if self.y**2 != self.x**3 + a * x + b:
+            raise ValueError('({}, {}) is not on the curve'.format(x, y))
+```
+
+Los operadores de adición `(+)`, multiplicación `(*)`, potenciación `(**)` y el booleano ¨no igual a¨ `(!=)` utilizan los métodos de `__add__`, `__mul__`, `__pow__` y `__ne__` del campo finito, respectivamente, y no las operaciones equivalentes de números enteros. Siendo capaces de realizar las mismas ecuaciones pero con una definición diferente para cada operador básico aritmético, podemos construír una librería para criptografía de curva elíptica.
+
+Ya hemos realizado el código de las dos clases que necesitamos para implementar los puntos de la curva eléctrica sobre un campo finito. Sin embargo, para probar nuestro trabajo, es útil que tener un suite de pruebas. Haremos esto utilizando los resultados del Ejercicio 1:
+
+```python
+class ECCTest(TestCase):
+
+    def test_on_curve(self):
+        prime = 223
+        a = FieldElement(0, prime)
+        b = FieldElement(7, prime)
+        valid_points = ((192, 105), (17, 56), (1, 193))
+        invalid_points = ((200, 119), (42, 99))
+        for x_raw, y_raw in valid_points:
+            x = FieldElement(x_raw, prime)
+            y = FieldElement(y_raw, prime)
+            Point(x, y, a, b)  # <1>
+        for x_raw, y_raw in invalid_points:
+            x = FieldElement(x_raw, prime)
+            y = FieldElement(y_raw, prime)
+            with self.assertRaises(ValueError):
+                Point(x, y, a, b)  # <1>
+```
+1. Vamos a pasar el objeto `FieldElement` a la clase `Point` para su inicialización. Este procedimiento utilizará todas las operaciones matemáticas que definimos en `FieldElement`.
+
+Podemos correr la prueba de la siguiente manera:
+
+```python
+>>> import ecc
+>>> from helper import run
+>>> run(ecc.ECCTest('test_on_curve'))
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK
+```
+
+1. `helper` es un módulo con valiosas funciones de utilidad, incluyendo la habilidad de correr pruebas unitarias de manera individual.
+
+## Adición de Puntos sobre un Campo Finito
+
+Podemos utilizar las mismas que ecuaciones sobre un campo finito, incluyendo la ecuación lineal:
+
+```text
+y = mx + b
+```
+
+Resulta que una "línea" en un campo finito no es precisamente lo que esperaríamos (Figura 3-3).
+
+![figura 3-3](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0303.png)
+
+*Figura 3-3. Línea sobre un campo finito.*
+
+La ecuación, sin embargo, funciona y podemos calcular el valor de `y` a partir de un valor de `x` dado.
+
+Notablemente, la adición de puntos sobre un campo finito también funciona. ¡Esto se debe a que la adición de puntos de una curva elíptica funciona sobre todos los campos! Las mismas funciones que utilizamos para calcular la adición de puntos para números reales, funciona para campos finitos. Específicamente, cuando `x1 ≠ x2`:
+
+```text
+P1 = (x1, y1), P2 = (x2, y2), P3 = (x3, y3)
+P1 + P2 = P3
+s = (y2 – y1)/(x2 – x1)
+x3 = s^2 – x1 – x2
+y3 = s(x1 – x3) – y1
+```
+
+Y cuando `P1 = P2`:
+
+```text
+P1 = (x1, y1), P3 = (x3, y3)
+P1 + P1 = P3
+s = (3 * (x1^2) + a)/(2 * y1)
+x3 = s2 – (2 * x1)
+y3 = s(x1 – x3) – y1
+```
+
+Todas las ecuaciones de curva elíptica funcionan sobre un campo finito, esto nos permitirá definir algunos primitivos criptográficos.
+
