@@ -164,3 +164,33 @@ y3 = s(x1 – x3) – y1
 
 Todas las ecuaciones de curva elíptica funcionan sobre un campo finito, esto nos permitirá definir algunos primitivos criptográficos.
 
+## Codeando la Adición de Puntos sobre un Campo Finito
+
+Debido a que implementamos el código de `FieldElement` de cierta manera para definir `__add__`, `__sub__`, `__mul__`, `__truediv__`, `__pow__`, `__eq__`, y `__ne__`; podemos simplemente inicializar `Point` con el objeto de `FieldElement` y la suma de puntos ha de funcionar:
+
+```python
+>>> from ecc import FieldElement, Point
+>>> prime = 223
+>>> a = FieldElement(num=0, prime=prime)
+>>> b = FieldElement(num=7, prime=prime)
+>>> x1 = FieldElement(num=192, prime=prime)
+>>> y1 = FieldElement(num=105, prime=prime)
+>>> x2 = FieldElement(num=17, prime=prime)
+>>> y2 = FieldElement(num=56, prime=prime)
+>>> p1 = Point(x1, y1, a, b)
+>>> p2 = Point(x2, y2, a, b)
+>>> print(p1+p2)
+Point(170,142)_0_7 FieldElement(223)
+```
+
+## Ejercicio 2
+
+Para la curva definida por la ecuación `y^2 = x^3 + 7` sobre `F223`, encuentre:
+
+- `(170, 142) + (60, 139)`
+- `(47, 71) + (17, 56)`
+- `(143, 98) + (76, 66)`
+
+## Ejercicio 3
+
+Extender el código de `ECCTest` para probar las sumas del ejercicio anterior. Llame esta función `test_add`.
