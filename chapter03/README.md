@@ -183,7 +183,7 @@ Debido a que implementamos el código de `FieldElement` de cierta manera para de
 Point(170,142)_0_7 FieldElement(223)
 ```
 
-## Ejercicio 2
+### Ejercicio 2
 
 Para la curva definida por la ecuación `y^2 = x^3 + 7` sobre `F223`, encuentre:
 
@@ -191,6 +191,46 @@ Para la curva definida por la ecuación `y^2 = x^3 + 7` sobre `F223`, encuentre:
 - `(47, 71) + (17, 56)`
 - `(143, 98) + (76, 66)`
 
-## Ejercicio 3
+### Ejercicio 3
 
 Extender el código de `ECCTest` para probar las sumas del ejercicio anterior. Llame esta función `test_add`.
+
+## Multiplicación Escalar para Curvas Elípticas
+
+Gracias a que podemos sumar el valor de un punto consigo mismo, podemos introducir la siguiente notación:
+
+```text
+(170, 142) + (170, 142) = 2 • (170, 142)
+```
+
+De manera similar, debido a la propiedad de asociación, podemos sumar el valor de los puntos de nuevo:
+
+```text
+2 • (170, 142) + (170, 142) = 3 • (170, 142)
+```
+
+Podemos hacer esta operación tantas veces querramos. Esto es a lo que llamamos *multiplicación escalar*. Esto es, tenemos un número *escalar* en frente del punto. Es posible hacer esto porque hemos definido la suma de puntos y ésta conserva la propiedad de asociación.
+
+Una de las propiedades de la multiplicación escalar es que resulta muy difícil predecir el resultado sin llevar a cabo el cálculo del mismo, observe la Figura 3-4.
+
+![figura 3-4](https://github.com/jimmysong/programmingbitcoin/blob/master/images/prbc_0304.png)
+
+*Figura 3-4.s Resultados de la multiplicación escalar para la ecuación `y^2 = x^3 + 7` sobre `F223` para el punto `(170, 142)`.*
+
+Cada punto se encuentra etiquetado con el número de veces que hemos sumado el punto. Se puede observar cómo el resultado se trata de un completo diagrama de dispersión. Esto es porque la adición de puntos no es lineal, y no es sencillo de calcular. Llevar acabo multiplicación escalar es relativamente sencillo y directo, pero la operación inversa, la división de puntos, no lo es.
+
+A este fenómeno se le conoce como el *problema de logaritmo discreto* y es la base de la criptografía de curva elíptica.
+
+Otra propiedad de la multiplicación escalar es que hasta cierto múltiplo, llegamos al punto al infinito. Recuerde que este punto es la identidad aditiva o `0`. Si nos imaginamos un punto `G` y lo multiplicamos de manera escalar hasta llegar al punto al infinito, obtenemos el siguiente conjunto:
+
+```text
+{ G, 2G, 3G, 4G, ... nG } donde nG = 0
+```
+
+Resulta que a este conjunto se le conoce como *grupo*, y debido a que *n* es finito, tenemos un *grupo finito*, o de manera más específica, un *grupo finito cíclico*. Los grupos son matemáticamente interesantes debido a cómo se comportan respecto a la adición:
+
+```text
+G + 4G = 5G or aG + bG = (a + b)G
+```
+
+
