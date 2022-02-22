@@ -233,4 +233,13 @@ Resulta que a este conjunto se le conoce como *grupo*, y debido a que *n* es fin
 G + 4G = 5G or aG + bG = (a + b)G
 ```
 
+Cuando combinamos el hecho de que el cálculo de la multiplicación escalar es simple pero el cálculo de la operación inversa es muy complicado, y las propiedades matemáticas de los grupos, contamos con lo necesario para definir la criptografía de curva elíptica.
+
+> ## ¿Por qué se le conoce como el Problema de Logaritmo Discreto?
+>
+> Quizás te preguntes por qué a la operación para darle marcha atrás a la *multiplicación* escalar se le conoce como problema de *logaritmo* discreto.
+>
+> Conocemos a la operación entre: Adición pero pudimos haberle fácilmente llamado una operación de. Punta
+>
+
 
